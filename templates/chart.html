@@ -1,0 +1,48 @@
+{% extends "bootstrap/base.html" %}
+{% block head %}
+  {{ super() }}
+  <script type="text/javascript" src="{{ url_for('static', filename='Chart.min.js') }}"></script>
+{% endblock %}
+{% block title %}
+  user-repo
+{% endblock %}
+
+{% block body %}
+  <div class="page-header" style="padding-left: 20px;">
+  <h1>MountainsPortal<small> kasztof</small></h1>
+  </div>
+  <div style="width: 80%; margin: auto">
+    <canvas id="bar-chart-grouped" width="400" height="150"></canvas>
+  </div>
+  <script>
+    // Bar chart
+    new Chart(document.getElementById("bar-chart-grouped"), {
+        type: 'bar',
+        data: {
+          labels: [{% for item in weeks %} "{{ item }}", {% endfor %}],
+          datasets: [
+            {
+              label: "Additions",
+              backgroundColor: "#00cc00",
+              data: {{ additions }}
+            }, {
+              label: "Deletions",
+              backgroundColor: "#cc0000",
+              data: {{ deletions }}
+            }
+          ]
+        },
+        options: {
+          title: {
+            display: true,
+            text: 'Population growth (millions)'
+          }
+        }
+    });
+
+
+
+
+  </script>
+{% endblock %}
+</html>

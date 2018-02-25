@@ -1,13 +1,15 @@
 {% extends "bootstrap/base.html" %}
-{% block title %}This is an example page{% endblock %}
+  {% block title %}
+    This is an example page
+  {% endblock %}
 
-{% block navbar %}
-<div class="navbar navbar-fixed-top">
+  {% block navbar %}
+    <div class="navbar navbar-fixed-top">
 
-</div>
-{% endblock %}
+    </div>
+  {% endblock %}
 
-{% block content %}
-
-  <h1>Hello, Bootstrap</h1>
-{% endblock %}
+  {% block content %}
+    {{ weeks }}
+    <h1>Hello, Bootstrap</h1>
+  {% endblock %}

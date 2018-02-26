@@ -1,19 +1,28 @@
 {% extends "bootstrap/base.html" %}
+  {% block head %}
+    {{ super() }}
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='css/styles.css') }}">
+  {% endblock %}
   {% block title %}
     User Profile
   {% endblock %}
 
   {% block body %}
+    <div class="container">
+      <div class="profile-personal-data">
+        <h2>{{ repos[0]['owner']['login'] }}</h2>
+      </div>
 
-    {% for repo in repos %}
-      {% if loop.first %}<div class="row">{% endif %}
-        <div class="col-md-6">
-          <a href="{{ repo['url'] }}">
-            {{ repo['name'] }}
-          </a>
+      {% for repo in repos %}
+        <div class="row">
+          <div class="box">
+            <a href="{{ repo['url'] }}">
+              {{ repo['name'] }}
+            </a>
+          </div>
         </div>
-      {% if loop.index is divisibleby(2) %}</div><div class="row">{% endif %}
-      {% if loop.last %}</div>{% endif %}
-    {% endfor %}
+      {% endfor %}
+
+    </div>
 
   {% endblock %}

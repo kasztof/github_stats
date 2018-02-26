@@ -16,4 +16,32 @@
     padding-top: 10px;
 }
 
+.bordered-background {
+    background-color: #f0f0f0;
+    padding: 10px
+}
 
+.box {
+  background-color: #444;
+  color: #fff;
+  border-radius: 5px;
+  padding: 15px;
+  font-size: 150%;
+}
+
+.container {
+    max-width: 80%;
+    padding:20px;
+    margin: auto;
+    float: bottom;
+}
+
+.row {
+    padding: 5px;
+}
+
+.body {
+    max-width: 80%;
+    margin: auto;
+    float: top;
+}

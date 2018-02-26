@@ -1,8 +1,11 @@
 import datetime
 
+import os
 from flask import Flask, render_template
 from flask_bootstrap import Bootstrap
 import requests
+
+import secret_settings
 
 app = Flask(__name__)
 Bootstrap(app)
@@ -10,7 +13,8 @@ app.config.update(
     DEBUG=True,
     TESTING=True,
     TEMPLATES_AUTO_RELOAD=True,
-    BOOTSTRAP_SERVE_LOCAL=True
+    BOOTSTRAP_SERVE_LOCAL=True,
+    SECRET_KEY=secret_settings.SECRET_KEY
 )
 
 
@@ -32,6 +36,7 @@ def get_weeks(data):
 @app.route('/')
 def hello_world():
     user = {'username': 'Miguel'}
+    print(app.config['SECRET_KEY'])
     return render_template('home.html', title='Home', user=user)
 
 

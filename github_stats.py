@@ -21,19 +21,17 @@ app.config.update(
 )
 
 
-def get_list_of_nth_elements(data, n):
-    result_list = []
-    for d in data:
-        result_list.append(d[n])
-    return result_list
+def get_json_data(user, repository, git_api_suffix):
+    response = requests.get(GITHUB_API_URL + '/repos/' + user + '/' + repository + '/stats/' + git_api_suffix)
+    return response.json()
 
 
-def get_weeks(data):
-    additions_list = []
-    for d in data:
-        additions_list.append(datetime.datetime.utcfromtimestamp(d[0]).strftime('%Y-%m-%d'))
-    print(additions_list)
-    return additions_list
+def unix_to_utc(timestamp):
+    return datetime.datetime.utcfromtimestamp(timestamp).strftime('%Y-%m-%d')
+
+
+def get_commits_sum_from_day(commit_activity_data, day_num):
+    return sum([week['days'][day_num] for week in commit_activity_data])
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -47,22 +45,26 @@ def home():
 
 @app.route('/profile/<username>')
 def user_profile(username):
-    repos = []
     response = requests.get(GITHUB_API_URL + '/users/' + username + '/repos')
     repositories = response.json()
     return render_template('user_profile.html', repos=repositories)
 
 
-@app.route("/chart")
-def chart():
-    url = 'https://api.github.com/repos/kasztof/MountainsPortal/stats/code_frequency'
-    r = requests.get(url)
-    response_data = r.json()
-    additons_data = get_list_of_nth_elements(response_data, 1)
-    deletions_data = get_list_of_nth_elements(response_data, 2)
-    weeks_data = get_weeks(response_data)
+@app.route('/stats/<user>/<repository>')
+def repository_stats(user, repository):
+    code_frequency_data = get_json_data(user, repository, 'code_frequency')
+    weeks_labels = [unix_to_utc(item[0]) for item in code_frequency_data]
+    additions = [item[1] for item in code_frequency_data]
+    deletions = [item[2] for item in code_frequency_data]
 
-    return render_template('chart.html', additions=additons_data, deletions=deletions_data, weeks=weeks_data)
+    commit_activity_data = get_json_data(user, repository, 'commit_activity')
+    commits_sum_by_days = [get_commits_sum_from_day(commit_activity_data, i) for i in range(7)]
+
+    participation_data = get_json_data(user, repository, 'participation')['all']
+
+    return render_template('chart.html', user=user, repository=repository,
+                           additions=additions, deletions=deletions, weeks=weeks_labels,
+                           days_data=commits_sum_by_days, week_activity_data=participation_data)
 
 
 if __name__ == '__main__':

@@ -16,7 +16,7 @@
       {% for repo in repos %}
         <div class="row">
           <div class="box">
-            <a href="{{ repo['url'] }}">
+            <a href="{{ url_for('repository_stats', user=repos[0]['owner']['login'], repository=repo['name']) }}">
               {{ repo['name'] }}
             </a>
           </div>

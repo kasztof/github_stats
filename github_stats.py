@@ -1,11 +1,14 @@
 import datetime
 
 import os
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect
 from flask_bootstrap import Bootstrap
 import requests
 
 import secret_settings
+from forms import FindUserForm
+
+GITHUB_API_URL = 'https://api.github.com'
 
 app = Flask(__name__)
 Bootstrap(app)
@@ -33,11 +36,13 @@ def get_weeks(data):
     return additions_list
 
 
-@app.route('/')
-def hello_world():
-    user = {'username': 'Miguel'}
-    print(app.config['SECRET_KEY'])
-    return render_template('home.html', title='Home', user=user)
+@app.route('/', methods=['GET', 'POST'])
+def home():
+    form = FindUserForm()
+    if form.validate_on_submit():
+        username = form.username.data
+        return redirect(GITHUB_API_URL + '/users/' + username + '/repos')
+    return render_template('home.html', title='Home', form=form)
 
 
 @app.route("/chart")

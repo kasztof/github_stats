@@ -1,0 +1,19 @@
+{% extends "bootstrap/base.html" %}
+  {% block title %}
+    User Profile
+  {% endblock %}
+
+  {% block body %}
+
+    {% for repo in repos %}
+      {% if loop.first %}<div class="row">{% endif %}
+        <div class="col-md-6">
+          <a href="{{ repo['url'] }}">
+            {{ repo['name'] }}
+          </a>
+        </div>
+      {% if loop.index is divisibleby(2) %}</div><div class="row">{% endif %}
+      {% if loop.last %}</div>{% endif %}
+    {% endfor %}
+
+  {% endblock %}

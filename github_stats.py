@@ -41,8 +41,16 @@ def home():
     form = FindUserForm()
     if form.validate_on_submit():
         username = form.username.data
-        return redirect(GITHUB_API_URL + '/users/' + username + '/repos')
-    return render_template('home.html', title='Home', form=form)
+        return redirect('/profile/' + username)
+    return render_template('home.html', form=form)
+
+
+@app.route('/profile/<username>')
+def user_profile(username):
+    repos = []
+    response = requests.get(GITHUB_API_URL + '/users/' + username + '/repos')
+    repositories = response.json()
+    return render_template('user_profile.html', repos=repositories)
 
 
 @app.route("/chart")
